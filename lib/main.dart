@@ -75,71 +75,101 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-          backgroundColor: appColors.darkPurple,
-          appBar: null,
-          bottomNavigationBar: BottomAppBar(
-            color: appColors.darkPurple,
-            child: IconTheme(
-              data:
-                  IconThemeData(color: Colors.white),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  for (int i = 0; i < bottomChoices.length; i++)
-                    IconButton(
-                        onPressed: bottomChoices.elementAt(i).onTapFunction,
-                        icon: Icon(bottomChoices.elementAt(i).icon))
-                ],
+    return Scaffold(
+      backgroundColor: appColors.purple,
+      appBar: null,
+      bottomNavigationBar: BottomAppBar(
+        color: appColors.lightPurple,
+        child: IconTheme(
+          data: IconThemeData(color: Colors.black),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              for (int i = 0; i < bottomChoices.length; i++)
+                IconButton(
+                    onPressed: bottomChoices.elementAt(i).onTapFunction,
+                    icon: Icon(bottomChoices.elementAt(i).icon))
+            ],
+          ),
+        ),
+      ),
+      body: FutureBuilder<List<SongModel>>(
+        future: _audioQuery.querySongs(
+          sortType: null,
+          orderType: OrderType.ASC_OR_SMALLER,
+          uriType: UriType.EXTERNAL,
+          ignoreCase: true,
+        ),
+        builder: (context, item) {
+          if (item.data == null) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (item.data!.isEmpty) {
+            return const Center(child: TextZip("No songs found"));
+          }
+          return CustomScrollView(slivers: <Widget>[
+            SliverPadding(
+              padding: EdgeInsets.only(top:5.h,bottom: 5.h),
+              sliver: SliverAppBar(
+                stretch: true,
+                expandedHeight: 10.h,
+                flexibleSpace: FlexibleSpaceBar(
+                  stretchModes: <StretchMode>[
+                    StretchMode.zoomBackground,
+                    StretchMode.blurBackground,
+                    StretchMode.fadeTitle,
+                  ],
+                  centerTitle: true,
+
+                  title: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text("Zip Player",
+                      overflow: TextOverflow.visible,
+                    style: TextStyle(fontSize: 5.h,),),
+                  ),
+
+                ),
+                backgroundColor: appColors.purple,
               ),
             ),
-          ),
-          body: FutureBuilder<List<SongModel>>(
-
-            future: _audioQuery.querySongs(
-              sortType: null,
-              orderType: OrderType.ASC_OR_SMALLER,
-              uriType: UriType.EXTERNAL,
-              ignoreCase: true,
-            ),
-            builder: (context, item) {
-              if (item.data == null) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              if (item.data!.isEmpty) {
-                return const Center(child: TextZip("No songs found"));
-              }
-              return ListView.builder(
-                itemCount: item.data?.length,
-                itemBuilder: (context, index) {
-                  return Hero(
-                    tag: 'music_$index',
-                    child: Material(
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 1.0),
-                        child: ListTile(
-                          leading: const CircleAvatar(
-                            child: Icon(Icons.play_arrow_outlined),
+            SliverPadding(
+              padding: const EdgeInsets.all(8.0),
+              sliver: SliverList(
+                delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                    return Hero(
+                      tag: 'music_$index',
+                      child: Material(
+                        color: Color.fromRGBO(0, 0, 0, 0),
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 1.0),
+                          child: ListTile(
+                            leading: const CircleAvatar(
+                              child: Icon(Icons.play_arrow_outlined),
+                            ),
+                            title: TextZip(item.data![index].displayNameWOExt),
+                            subtitle:
+                                TextZip(item.data![index].artist.toString()),
+                            tileColor: appColors.darkPurple,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            onTap: () => chooseMusic(item.data![index]),
                           ),
-                          title: TextZip(item.data![index].displayNameWOExt),
-                          subtitle: TextZip(item.data![index].artist.toString()),
-                          tileColor: appColors.purple,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                          ),
-
-                          onTap: () => chooseMusic(item.data![index]),
                         ),
                       ),
-                    ),
-                  );
-                },
-              );
-            },
-          ),
+                    );
+                  },
+                  childCount: item.data?.length,
+                ),
+              ),
+            ),
+          ]);
+        },
+      ),
     );
   }
 }

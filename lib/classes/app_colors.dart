@@ -2,9 +2,10 @@
 import 'package:flutter/material.dart';
 
 class AppColors{
-  Color darkBlue = Color.fromRGBO(0, 0, 47, 1.0);
-  Color purple = Color.fromRGBO(49, 0, 126, 1.0);
-  Color darkPurple = Color.fromRGBO(37, 0, 110, 1.0);
+  Color purple = Color.fromRGBO(94, 84, 142, 1.0);
+  Color darkPurple = Color.fromRGBO(35, 25, 66, 1.0);
+  Color lightPurple = Color.fromRGBO(135, 101, 194, 1.0);
+  Color pink = Color.fromRGBO(224, 177, 203, 1.0);
   Color darkGrey = Color.fromRGBO(75, 75, 91, 1.0);
 
 
