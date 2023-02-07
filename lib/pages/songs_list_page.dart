@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:music_player_/classes/music_funcs.dart';
 
 import 'package:music_player_/pages/audio_playing_page.dart';
@@ -9,11 +10,16 @@ import 'package:sizer/sizer.dart';
 
 import '../classes/app_colors.dart';
 import '../classes/bottom_choice.dart';
+import '../custom_widgets/small_song_line.dart';
 import '../custom_widgets/text_customized_white.dart';
 
 
 class SongsListPage extends StatefulWidget {
-  const SongsListPage({super.key});
+  const SongsListPage({super.key, required this.isPlaying, required this.songModelItem, required this.player});
+  final  AudioPlayer? player;
+  final bool? isPlaying;
+  final SongModel? songModelItem;
+
 
   @override
   State<SongsListPage> createState() => _SongsListPageState();
@@ -24,10 +30,6 @@ class _SongsListPageState extends State<SongsListPage> {
   MusicFuncs musicFuncs = MusicFuncs();
   final _audioQuery = OnAudioQuery();
   bool musicIsLoaded = false;
-  List<BottomChoice> bottomChoices = [
-    const BottomChoice(
-        title: "Home", icon: Icons.home_filled, onTapFunction: null)
-  ];
 
 
 
@@ -50,20 +52,11 @@ class _SongsListPageState extends State<SongsListPage> {
       backgroundColor: appColors.purple,
       appBar: null,
       bottomNavigationBar: BottomAppBar(
-        color: appColors.lightPurple,
-        child: IconTheme(
-          data: IconThemeData(color: Colors.black),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              for (int i = 0; i < bottomChoices.length; i++)
-                IconButton(
-                    onPressed: bottomChoices.elementAt(i).onTapFunction,
-                    icon: Icon(bottomChoices.elementAt(i).icon))
-            ],
-          ),
-        ),
+        color: appColors.purple,
+        elevation: 1,
+        child: widget.isPlaying!=null||widget.songModelItem!=null||widget.player!=null?
+          SmallSongLine(isPlaying:  widget.isPlaying,item:widget.songModelItem,player: widget.player,
+        ):const SizedBox(),
       ),
       body: FutureBuilder<List<SongModel>>(
         future: _audioQuery.querySongs(
@@ -74,7 +67,7 @@ class _SongsListPageState extends State<SongsListPage> {
         ),
         builder: (context, item) {
           if (item.data == null) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
@@ -128,8 +121,14 @@ class _SongsListPageState extends State<SongsListPage> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0),
                             ),
-                            onTap: () => musicFuncs.chooseMusic(context,item.data![index],
-                                item.data),
+                            onTap: () {
+                              if(widget.player!=null)
+                                {
+                                  widget.player?.stop();
+                                }
+                              musicFuncs.chooseMusic(context, item.data![index],
+                                  item.data);
+                            },
                           ),
                         ),
                       ),

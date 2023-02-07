@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.deepPurple,
           primaryColor: Color.fromRGBO(135, 101, 194, 1.0),
         ),
-        home: const SongsListPage(),
+        home: const SongsListPage(isPlaying: null,songModelItem: null, player: null,),
       );
     });
   }

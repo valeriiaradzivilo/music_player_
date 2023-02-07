@@ -10,7 +10,8 @@ class TextZip extends StatelessWidget {
       padding: const EdgeInsets.all(4.0),
       child: Text(text,
       style: TextStyle(color: Colors.white,
-      fontSize: 2.h),),
+      fontSize: 2.h),
+      overflow: TextOverflow.ellipsis,),
     );
   }
 }

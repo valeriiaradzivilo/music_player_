@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:music_player_/classes/app_colors.dart';
 import 'package:music_player_/classes/music_funcs.dart';
+import 'package:music_player_/custom_widgets/play_button.dart';
 import 'package:music_player_/custom_widgets/record.dart';
 import 'package:music_player_/custom_widgets/song_name_text.dart';
+import 'package:music_player_/pages/songs_list_page.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-import 'package:sizer/sizer.dart';
 
 class AudioPlayingPage extends StatefulWidget {
   const AudioPlayingPage({super.key, required this.item, required this.songs});
@@ -23,7 +24,6 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
   AudioPlayer player = AudioPlayer();
   AppColors appColors = AppColors();
   MusicFuncs musicFuncs = MusicFuncs();
-
   bool isPlaying = false;
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
@@ -35,20 +35,9 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
     super.dispose();
   }
 
-  @override
-  void initState() {
-    setSong(widget.item.uri);
-    _controller.addListener(() {
-      setState(() {
-        position = player.position;
-      });
-    });
-    super.initState();
-  }
-
-  setSong(String? uri) async {
+  setSong() async {
     try {
-      await player.setAudioSource(AudioSource.uri(Uri.parse(uri!)));
+      await player.setAudioSource(AudioSource.uri(Uri.parse(widget.item.uri!)));
       player.play();
       setState(() {
         isLoaded = true;
@@ -60,12 +49,22 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
       log("Error parsing song");
       isLoaded = false;
     }
+
   }
 
-  playSong()
-  {
-    print("music on");
-    player.play();
+  @override
+  void initState() {
+    setSong();
+    _controller.addListener(() {
+      setState(() {
+        position = player.position;
+      });
+    });
+    super.initState();
+  }
+
+  playSong() {
+    musicFuncs.playSong(player);
     setState(() {
       _controller.repeat();
       isPlaying = true;
@@ -73,8 +72,8 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
     });
   }
 
-  stopSong(){
-    player.pause();
+  stopSong() {
+    musicFuncs.pauseSong(player);
     setState(() {
       isPlaying = false;
       _controller.stop();
@@ -101,18 +100,22 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
       backgroundColor: appColors.darkPurple,
       body: Visibility(
         visible: isLoaded,
-        replacement: Center(child: const CircularProgressIndicator()),
+        replacement: const Center(child: CircularProgressIndicator()),
         child: GestureDetector(
           onVerticalDragEnd: (DragEndDetails details) {
             if (details.primaryVelocity! > 0) {
-              // User swiped Left
-              print("down");
-              Navigator.pop(context);
+              // User swiped down
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SongsListPage(isPlaying: isPlaying, songModelItem: widget.item, player: player,)),
+
+              );
+
             }
           },
           child: Container(
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(100),
                   topRight: Radius.circular(100),
                 ),
@@ -132,7 +135,7 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SongNameText(widget.item.displayNameWOExt,true),
+                        SongNameText(widget.item.displayNameWOExt, true),
                         SongNameText(widget.item.artist.toString(), false),
                       ],
                     ),
@@ -159,53 +162,46 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
                       CircleAvatar(
                         radius: 35,
                         child: IconButton(
-                          icon: Icon(
-                              Icons.skip_previous_outlined),
+                          icon: const Icon(Icons.skip_previous_outlined),
                           iconSize: 50,
                           onPressed: () async {
-                            int itemPosition = widget.songs!.indexOf(widget.item);
+                            int itemPosition =
+                                widget.songs!.indexOf(widget.item);
                             int newItemPosition = 0;
-                            itemPosition==0? newItemPosition = widget.songs!.length-1:newItemPosition = itemPosition-1;
+                            itemPosition == 0
+                                ? newItemPosition = widget.songs!.length - 1
+                                : newItemPosition = itemPosition - 1;
                             Navigator.pop(context);
-                            musicFuncs.chooseMusic(context, widget.songs!.elementAt(newItemPosition), widget.songs);
-
+                            musicFuncs.chooseMusic(
+                                context,
+                                widget.songs!.elementAt(newItemPosition),
+                                widget.songs);
                           },
                         ),
                       ),
+                      playButton(isPlaying, playSong, stopSong),
                       CircleAvatar(
                         radius: 35,
                         child: IconButton(
-                          icon: Icon(
-                              isPlaying ? Icons.pause_rounded : Icons.play_arrow_outlined),
+                          icon: const Icon(Icons.skip_next_outlined),
                           iconSize: 50,
                           onPressed: () async {
-                            if (!isPlaying) {
-                              playSong();
-                            } else {
-                              stopSong();
-                            }
-                          },
-                        ),
-                      ),
-                      CircleAvatar(
-                        radius: 35,
-                        child: IconButton(
-                          icon: Icon(
-                              Icons.skip_next_outlined),
-                          iconSize: 50,
-                          onPressed: () async {
-                            int itemPosition = widget.songs!.indexOf(widget.item);
+                            int itemPosition =
+                                widget.songs!.indexOf(widget.item);
                             int newItemPosition = 0;
-                            itemPosition==widget.songs!.length? newItemPosition = 0:newItemPosition = itemPosition+1;
+                            itemPosition == widget.songs!.length
+                                ? newItemPosition = 0
+                                : newItemPosition = itemPosition + 1;
                             Navigator.pop(context);
-                            musicFuncs.chooseMusic(context, widget.songs!.elementAt(newItemPosition), widget.songs);
+                            musicFuncs.chooseMusic(
+                                context,
+                                widget.songs!.elementAt(newItemPosition),
+                                widget.songs);
                           },
                         ),
                       ),
                     ],
                   ),
-
-
                 ],
               ),
             ),

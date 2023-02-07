@@ -1,5 +1,8 @@
 
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 import '../pages/audio_playing_page.dart';
@@ -28,6 +31,17 @@ class MusicFuncs{
     );
   }
 
+
+  playSong(AudioPlayer player)
+  {
+    print("music on");
+    player.play();
+  }
+
+  pauseSong(AudioPlayer player)
+  {
+    player.pause();
+  }
 
 
 
