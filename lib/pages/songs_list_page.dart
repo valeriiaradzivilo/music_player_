@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:music_player_/classes/music_funcs.dart';
@@ -13,13 +12,15 @@ import '../classes/bottom_choice.dart';
 import '../custom_widgets/small_song_line.dart';
 import '../custom_widgets/text_customized_white.dart';
 
-
 class SongsListPage extends StatefulWidget {
-  const SongsListPage({super.key, required this.isPlaying, required this.songModelItem, required this.player});
-  final  AudioPlayer? player;
+  const SongsListPage(
+      {super.key,
+      required this.isPlaying,
+      required this.songModelItem,
+      required this.player});
+  final AudioPlayer? player;
   final bool? isPlaying;
   final SongModel? songModelItem;
-
 
   @override
   State<SongsListPage> createState() => _SongsListPageState();
@@ -31,7 +32,10 @@ class _SongsListPageState extends State<SongsListPage> {
   final _audioQuery = OnAudioQuery();
   bool musicIsLoaded = false;
 
-
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -50,13 +54,24 @@ class _SongsListPageState extends State<SongsListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: appColors.purple,
-      appBar: null,
+      appBar: AppBar(
+        title: const Text("Zip player"),
+        backgroundColor: appColors.lightPurple,
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+      ),
       bottomNavigationBar: BottomAppBar(
         color: appColors.purple,
         elevation: 1,
-        child: widget.isPlaying!=null||widget.songModelItem!=null||widget.player!=null?
-          SmallSongLine(isPlaying:  widget.isPlaying,item:widget.songModelItem,player: widget.player,
-        ):const SizedBox(),
+        child: widget.isPlaying != null ||
+                widget.songModelItem != null ||
+                widget.player != null
+            ? SmallSongLine(
+                isPlaying: widget.isPlaying,
+                item: widget.songModelItem,
+                player: widget.player,
+              )
+            : const SizedBox(),
       ),
       body: FutureBuilder<List<SongModel>>(
         future: _audioQuery.querySongs(
@@ -76,34 +91,10 @@ class _SongsListPageState extends State<SongsListPage> {
           }
           return CustomScrollView(slivers: <Widget>[
             SliverPadding(
-              padding: EdgeInsets.only(top:5.h,bottom: 5.h),
-              sliver: SliverAppBar(
-                stretch: true,
-                expandedHeight: 10.h,
-                flexibleSpace: FlexibleSpaceBar(
-                  stretchModes: <StretchMode>[
-                    StretchMode.zoomBackground,
-                    StretchMode.blurBackground,
-                    StretchMode.fadeTitle,
-                  ],
-                  centerTitle: true,
-
-                  title: Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Text("Zip Player",
-                      overflow: TextOverflow.visible,
-                      style: TextStyle(fontSize: 5.h,),),
-                  ),
-
-                ),
-                backgroundColor: appColors.purple,
-              ),
-            ),
-            SliverPadding(
               padding: const EdgeInsets.all(8.0),
               sliver: SliverList(
                 delegate: SliverChildBuilderDelegate(
-                      (context, index) {
+                  (context, index) {
                     return Hero(
                       tag: 'music_$index',
                       child: Material(
@@ -116,18 +107,17 @@ class _SongsListPageState extends State<SongsListPage> {
                             ),
                             title: TextZip(item.data![index].displayNameWOExt),
                             subtitle:
-                            TextZip(item.data![index].artist.toString()),
+                                TextZip(item.data![index].artist.toString()),
                             tileColor: appColors.darkPurple,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0),
                             ),
                             onTap: () {
-                              if(widget.player!=null)
-                                {
-                                  widget.player?.stop();
-                                }
-                              musicFuncs.chooseMusic(context, item.data![index],
-                                  item.data);
+                              if (widget.player != null) {
+                                widget.player?.stop();
+                              }
+                              musicFuncs.chooseMusic(
+                                  context, item.data![index], item.data);
                             },
                           ),
                         ),
@@ -144,4 +134,3 @@ class _SongsListPageState extends State<SongsListPage> {
     );
   }
 }
-

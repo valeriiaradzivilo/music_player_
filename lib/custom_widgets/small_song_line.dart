@@ -55,7 +55,8 @@ class _SmallSongLineState extends State<SmallSongLine> {
         child: Row(children: [
           playButton(isPlaying, playSong,
               pauseSong),
-          Expanded(child: TextZip(widget.item!.displayNameWOExt)),
+              Expanded(
+                  child: TextZip("${widget.item!.displayNameWOExt}\n${widget.item!.artist!}")),
         ]),
       ),
     );

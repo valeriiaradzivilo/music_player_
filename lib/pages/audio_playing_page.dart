@@ -29,11 +29,6 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
   Duration position = Duration.zero;
   bool isLoaded = false;
 
-  @override
-  void dispose() {
-    player.dispose();
-    super.dispose();
-  }
 
   setSong() async {
     try {
@@ -50,6 +45,13 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
       isLoaded = false;
     }
 
+  }
+
+
+  @override
+  void dispose(){
+    player.dispose();
+    super.dispose();
   }
 
   @override
@@ -105,11 +107,13 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
           onVerticalDragEnd: (DragEndDetails details) {
             if (details.primaryVelocity! > 0) {
               // User swiped down
+
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => SongsListPage(isPlaying: isPlaying, songModelItem: widget.item, player: player,)),
 
               );
+
 
             }
           },

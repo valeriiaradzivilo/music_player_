@@ -10,7 +10,7 @@ class MusicFuncs{
   /// on list tile tap open chosen music file
   chooseMusic(context, SongModel item,List<SongModel>? songs) {
     print("play music {$item.displayName}");
-    Navigator.of(context).push(_createSlidingRoute(item, songs));
+    Navigator.of(context).pushReplacement(_createSlidingRoute(item, songs));
   }
 
   Route _createSlidingRoute(SongModel item, List<SongModel>? songs) {
