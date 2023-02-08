@@ -11,7 +11,12 @@ import 'package:music_player_/pages/songs_list_page.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class AudioPlayingPage extends StatefulWidget {
-  const AudioPlayingPage({super.key, required this.item, required this.songs,required this.oldPlayer, });
+  const AudioPlayingPage({
+    super.key,
+    required this.item,
+    required this.songs,
+    required this.oldPlayer,
+  });
   final SongModel item;
   final List<SongModel>? songs;
   final AudioPlayer? oldPlayer;
@@ -30,15 +35,13 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
   Duration position = Duration.zero;
   bool isLoaded = false;
 
-
   setSong() async {
     try {
-      if(widget.oldPlayer==null) {
+      if (widget.oldPlayer == null) {
         player = AudioPlayer();
         await player
             .setAudioSource(AudioSource.uri(Uri.parse(widget.item.uri!)));
-      }
-      else{
+      } else {
         player = widget.oldPlayer!;
       }
       player.play();
@@ -51,12 +54,10 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
       log("Error parsing song");
       isLoaded = false;
     }
-
   }
 
-
   @override
-  void dispose(){
+  void dispose() {
     player.dispose();
     super.dispose();
   }
@@ -117,11 +118,13 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
 
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SongsListPage(songModelItem: widget.item, player: player, songs: widget.songs,)),
-
+                MaterialPageRoute(
+                    builder: (context) => SongsListPage(
+                          songModelItem: widget.item,
+                          player: player,
+                          songs: widget.songs,
+                        )),
               );
-
-
             }
           },
           child: Container(
@@ -182,11 +185,11 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
                             itemPosition == 0
                                 ? newItemPosition = widget.songs!.length - 1
                                 : newItemPosition = itemPosition - 1;
-                            Navigator.pop(context);
                             musicFuncs.chooseMusic(
                                 context,
                                 widget.songs!.elementAt(newItemPosition),
-                                widget.songs, null);
+                                widget.songs,
+                                null);
                           },
                         ),
                       ),
@@ -200,14 +203,15 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
                             int itemPosition =
                                 widget.songs!.indexOf(widget.item);
                             int newItemPosition = 0;
-                            itemPosition == widget.songs!.length
+                            itemPosition == widget.songs!.length - 1
                                 ? newItemPosition = 0
                                 : newItemPosition = itemPosition + 1;
-                            Navigator.pop(context);
+
                             musicFuncs.chooseMusic(
                                 context,
                                 widget.songs!.elementAt(newItemPosition),
-                                widget.songs,null);
+                                widget.songs,
+                                null);
                           },
                         ),
                       ),

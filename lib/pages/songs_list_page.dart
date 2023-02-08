@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:music_player_/classes/music_funcs.dart';
-
-import 'package:music_player_/pages/audio_playing_page.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:sizer/sizer.dart';
-
 import '../classes/app_colors.dart';
-import '../classes/bottom_choice.dart';
 import '../custom_widgets/small_song_line.dart';
 import '../custom_widgets/text_customized_white.dart';
 
