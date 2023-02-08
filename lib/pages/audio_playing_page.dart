@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:music_player_/classes/app_colors.dart';
@@ -43,13 +42,20 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
         player = AudioPlayer();
         await player
             .setAudioSource(AudioSource.uri(Uri.parse(widget.item.uri!)));
+        setState(() {
+          isPlaying = true;
+        });
       } else {
         player = widget.oldPlayer!;
+        setState(() {
+          isPlaying = player.playing;
+        });
       }
-      player.play();
+      if(isPlaying) {
+        player.play();
+      }
       setState(() {
         isLoaded = true;
-        isPlaying = true;
         duration = player.duration!;
       });
     } on Exception {

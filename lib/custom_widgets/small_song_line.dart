@@ -57,6 +57,8 @@ class _SmallSongLineState extends State<SmallSongLine>
     return GestureDetector(
       onTap: () {
         position = widget.player!.position;
+        musicFuncs =
+            MusicFuncs(context, widget.songs, widget.item!, widget.player);
         musicFuncs.chooseMusic();
       },
       child: Container(

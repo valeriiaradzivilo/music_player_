@@ -25,16 +25,15 @@ class _SongsListPageState extends State<SongsListPage> {
   late MusicFuncs musicFuncs;
   final _audioQuery = OnAudioQuery();
   bool musicIsLoaded = false;
-  late SongModel currentSong;
 
   @override
   void dispose() {
     super.dispose();
   }
 
-  /// init state while loading app
   @override
   void initState() {
+    musicFuncs = MusicFuncs(context, widget.songs, widget.songModelItem!, widget.player);
     super.initState();
     requestPermission();
   }
@@ -45,7 +44,6 @@ class _SongsListPageState extends State<SongsListPage> {
       musicIsLoaded = true;
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -117,11 +115,8 @@ class _SongsListPageState extends State<SongsListPage> {
                               if (widget.player != null) {
                                 widget.player?.stop();
                               }
-                              setState(() {
-                                currentSong = item.data![index];
-                                List<SongModel> songs = item.data!;
-                                musicFuncs = MusicFuncs(context, songs,currentSong, null);
-                              });
+                              musicFuncs = MusicFuncs(context, item.data!, item.data!.elementAt(index), widget.player);
+
                               musicFuncs.chooseMusic();
                             },
                           ),

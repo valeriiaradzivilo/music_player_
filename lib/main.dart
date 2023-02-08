@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:music_player_/pages/songs_list_page.dart';
 import 'package:sizer/sizer.dart';
@@ -5,6 +6,7 @@ import 'package:sizer/sizer.dart';
 
 void main() {
   runApp(const MyApp());
+  // AwesomeNotifications().initialize(defaultIcon, channels)
 }
 
 class MyApp extends StatelessWidget {
