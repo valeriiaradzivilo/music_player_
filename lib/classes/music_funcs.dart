@@ -1,6 +1,3 @@
-
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -9,7 +6,7 @@ import '../pages/audio_playing_page.dart';
 class MusicFuncs{
   /// on list tile tap open chosen music file
   chooseMusic(context, SongModel item,List<SongModel>? songs) {
-    print("play music {$item.displayName}");
+
     Navigator.of(context).pushReplacement(_createSlidingRoute(item, songs));
   }
 

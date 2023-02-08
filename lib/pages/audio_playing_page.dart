@@ -110,7 +110,7 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
 
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SongsListPage(isPlaying: isPlaying, songModelItem: widget.item, player: player,)),
+                MaterialPageRoute(builder: (context) => SongsListPage(songModelItem: widget.item, player: player, songs: widget.songs,)),
 
               );
 

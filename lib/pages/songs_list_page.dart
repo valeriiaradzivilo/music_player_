@@ -15,12 +15,11 @@ import '../custom_widgets/text_customized_white.dart';
 class SongsListPage extends StatefulWidget {
   const SongsListPage(
       {super.key,
-      required this.isPlaying,
       required this.songModelItem,
-      required this.player});
+      required this.player, required this.songs});
   final AudioPlayer? player;
-  final bool? isPlaying;
   final SongModel? songModelItem;
+  final List<SongModel>? songs;
 
   @override
   State<SongsListPage> createState() => _SongsListPageState();
@@ -63,13 +62,11 @@ class _SongsListPageState extends State<SongsListPage> {
       bottomNavigationBar: BottomAppBar(
         color: appColors.purple,
         elevation: 1,
-        child: widget.isPlaying != null ||
-                widget.songModelItem != null ||
-                widget.player != null
+        child: widget.songModelItem != null ||
+                widget.player != null || widget.songs!=null
             ? SmallSongLine(
-                isPlaying: widget.isPlaying,
                 item: widget.songModelItem,
-                player: widget.player,
+                player: widget.player, songs: widget.songs,
               )
             : const SizedBox(),
       ),
@@ -81,6 +78,7 @@ class _SongsListPageState extends State<SongsListPage> {
           ignoreCase: true,
         ),
         builder: (context, item) {
+
           if (item.data == null) {
             return const Center(
               child: CircularProgressIndicator(),
@@ -88,6 +86,11 @@ class _SongsListPageState extends State<SongsListPage> {
           }
           if (item.data!.isEmpty) {
             return const Center(child: TextZip("No songs found"));
+          }
+          if (widget.songs==null && item.data != null){
+            widget.songs?.clear();
+            widget.songs?.addAll(item.data!);
+
           }
           return CustomScrollView(slivers: <Widget>[
             SliverPadding(
