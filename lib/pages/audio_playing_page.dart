@@ -6,9 +6,11 @@ import 'package:music_player_/classes/app_colors.dart';
 import 'package:music_player_/classes/music_funcs.dart';
 import 'package:music_player_/custom_widgets/play_button.dart';
 import 'package:music_player_/custom_widgets/record.dart';
+import 'package:music_player_/custom_widgets/skip_button.dart';
 import 'package:music_player_/custom_widgets/song_name_text.dart';
 import 'package:music_player_/pages/songs_list_page.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import 'package:sizer/sizer.dart';
 
 class AudioPlayingPage extends StatefulWidget {
   const AudioPlayingPage({
@@ -29,7 +31,7 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
     with TickerProviderStateMixin {
   late AudioPlayer player = AudioPlayer();
   AppColors appColors = AppColors();
-  MusicFuncs musicFuncs = MusicFuncs();
+  late MusicFuncs musicFuncs;
   bool isPlaying = false;
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
@@ -69,6 +71,10 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
       setState(() {
         position = player.position;
       });
+    });
+
+    setState(() {
+      musicFuncs = MusicFuncs(context, widget.songs, widget.item, widget.oldPlayer);
     });
     super.initState();
   }
@@ -173,48 +179,9 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      CircleAvatar(
-                        radius: 35,
-                        child: IconButton(
-                          icon: const Icon(Icons.skip_previous_outlined),
-                          iconSize: 50,
-                          onPressed: () async {
-                            int itemPosition =
-                                widget.songs!.indexOf(widget.item);
-                            int newItemPosition = 0;
-                            itemPosition == 0
-                                ? newItemPosition = widget.songs!.length - 1
-                                : newItemPosition = itemPosition - 1;
-                            musicFuncs.chooseMusic(
-                                context,
-                                widget.songs!.elementAt(newItemPosition),
-                                widget.songs,
-                                null);
-                          },
-                        ),
-                      ),
-                      playButton(isPlaying, playSong, stopSong),
-                      CircleAvatar(
-                        radius: 35,
-                        child: IconButton(
-                          icon: const Icon(Icons.skip_next_outlined),
-                          iconSize: 50,
-                          onPressed: () async {
-                            int itemPosition =
-                                widget.songs!.indexOf(widget.item);
-                            int newItemPosition = 0;
-                            itemPosition == widget.songs!.length - 1
-                                ? newItemPosition = 0
-                                : newItemPosition = itemPosition + 1;
-
-                            musicFuncs.chooseMusic(
-                                context,
-                                widget.songs!.elementAt(newItemPosition),
-                                widget.songs,
-                                null);
-                          },
-                        ),
-                      ),
+                      skipButton(false, musicFuncs.playNextSong, musicFuncs.playPreviousSong,5.h),
+                      playButton(isPlaying, playSong, stopSong,5.h),
+                      skipButton(true, musicFuncs.playNextSong, musicFuncs.playPreviousSong,5.h),
                     ],
                   ),
                 ],

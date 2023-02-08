@@ -22,15 +22,17 @@ class SongsListPage extends StatefulWidget {
 
 class _SongsListPageState extends State<SongsListPage> {
   AppColors appColors = AppColors();
-  MusicFuncs musicFuncs = MusicFuncs();
+  late MusicFuncs musicFuncs;
   final _audioQuery = OnAudioQuery();
   bool musicIsLoaded = false;
+  late SongModel currentSong;
 
   @override
   void dispose() {
     super.dispose();
   }
 
+  /// init state while loading app
   @override
   void initState() {
     super.initState();
@@ -43,6 +45,7 @@ class _SongsListPageState extends State<SongsListPage> {
       musicIsLoaded = true;
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -114,8 +117,12 @@ class _SongsListPageState extends State<SongsListPage> {
                               if (widget.player != null) {
                                 widget.player?.stop();
                               }
-                              musicFuncs.chooseMusic(
-                                  context, item.data![index], item.data,null);
+                              setState(() {
+                                currentSong = item.data![index];
+                                List<SongModel> songs = item.data!;
+                                musicFuncs = MusicFuncs(context, songs,currentSong, null);
+                              });
+                              musicFuncs.chooseMusic();
                             },
                           ),
                         ),
