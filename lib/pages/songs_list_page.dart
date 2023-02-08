@@ -120,7 +120,7 @@ class _SongsListPageState extends State<SongsListPage> {
                                 widget.player?.stop();
                               }
                               musicFuncs.chooseMusic(
-                                  context, item.data![index], item.data);
+                                  context, item.data![index], item.data,null);
                             },
                           ),
                         ),

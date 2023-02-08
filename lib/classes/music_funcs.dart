@@ -5,14 +5,14 @@ import 'package:on_audio_query/on_audio_query.dart';
 import '../pages/audio_playing_page.dart';
 class MusicFuncs{
   /// on list tile tap open chosen music file
-  chooseMusic(context, SongModel item,List<SongModel>? songs) {
+  chooseMusic(context, SongModel item,List<SongModel>? songs,AudioPlayer? oldPlayer) {
 
-    Navigator.of(context).pushReplacement(_createSlidingRoute(item, songs));
+    Navigator.of(context).pushReplacement(_createSlidingRoute(item, songs,oldPlayer));
   }
 
-  Route _createSlidingRoute(SongModel item, List<SongModel>? songs) {
+  Route _createSlidingRoute(SongModel item, List<SongModel>? songs, AudioPlayer? oldPlayer) {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => AudioPlayingPage(item: item, songs: songs,),
+      pageBuilder: (context, animation, secondaryAnimation) => AudioPlayingPage(item: item, songs: songs, oldPlayer: oldPlayer,),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;

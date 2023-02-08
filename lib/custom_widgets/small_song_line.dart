@@ -14,10 +14,11 @@ class SmallSongLine extends StatefulWidget {
   State<SmallSongLine> createState() => _SmallSongLineState();
 }
 
-class _SmallSongLineState extends State<SmallSongLine> {
+class _SmallSongLineState extends State<SmallSongLine> with TickerProviderStateMixin{
   MusicFuncs musicFuncs = MusicFuncs();
   late bool isPlaying = widget.player!.playing;
   AppColors appColors = AppColors();
+  late Duration position;
 
 
 
@@ -25,6 +26,10 @@ class _SmallSongLineState extends State<SmallSongLine> {
   @override
   void initState() {
     isPlaying = widget.player!.playing;
+      setState(() {
+        position = widget.player!.position;
+      });
+
     super.initState();
   }
 
@@ -43,12 +48,14 @@ class _SmallSongLineState extends State<SmallSongLine> {
     musicFuncs.pauseSong(widget.player!);
   }
 
+
   @override
   Widget build(BuildContext context) {
 
     return GestureDetector(
       onTap: (){
-        musicFuncs.chooseMusic(context, widget.item!, widget.songs);
+        position = widget.player!.position;
+        musicFuncs.chooseMusic(context, widget.item!, widget.songs,widget.player);
       },
       child: Container(
         decoration: BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(20),topRight: Radius.circular(20)),

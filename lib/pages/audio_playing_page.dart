@@ -11,9 +11,10 @@ import 'package:music_player_/pages/songs_list_page.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 
 class AudioPlayingPage extends StatefulWidget {
-  const AudioPlayingPage({super.key, required this.item, required this.songs});
+  const AudioPlayingPage({super.key, required this.item, required this.songs,required this.oldPlayer, });
   final SongModel item;
   final List<SongModel>? songs;
+  final AudioPlayer? oldPlayer;
 
   @override
   State<AudioPlayingPage> createState() => _AudioPlayingPageState();
@@ -21,7 +22,7 @@ class AudioPlayingPage extends StatefulWidget {
 
 class _AudioPlayingPageState extends State<AudioPlayingPage>
     with TickerProviderStateMixin {
-  AudioPlayer player = AudioPlayer();
+  late AudioPlayer player = AudioPlayer();
   AppColors appColors = AppColors();
   MusicFuncs musicFuncs = MusicFuncs();
   bool isPlaying = false;
@@ -32,13 +33,19 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
 
   setSong() async {
     try {
-      await player.setAudioSource(AudioSource.uri(Uri.parse(widget.item.uri!)));
+      if(widget.oldPlayer==null) {
+        player = AudioPlayer();
+        await player
+            .setAudioSource(AudioSource.uri(Uri.parse(widget.item.uri!)));
+      }
+      else{
+        player = widget.oldPlayer!;
+      }
       player.play();
       setState(() {
         isLoaded = true;
         isPlaying = true;
         duration = player.duration!;
-        position = player.position;
       });
     } on Exception {
       log("Error parsing song");
@@ -179,7 +186,7 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
                             musicFuncs.chooseMusic(
                                 context,
                                 widget.songs!.elementAt(newItemPosition),
-                                widget.songs);
+                                widget.songs, null);
                           },
                         ),
                       ),
@@ -200,7 +207,7 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
                             musicFuncs.chooseMusic(
                                 context,
                                 widget.songs!.elementAt(newItemPosition),
-                                widget.songs);
+                                widget.songs,null);
                           },
                         ),
                       ),
