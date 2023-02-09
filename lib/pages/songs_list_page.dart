@@ -11,7 +11,8 @@ class SongsListPage extends StatefulWidget {
   const SongsListPage(
       {super.key,
       required this.songModelItem,
-      required this.player, required this.songs});
+      required this.player,
+      required this.songs});
   final AudioPlayer? player;
   final SongModel? songModelItem;
   final List<SongModel>? songs;
@@ -33,7 +34,6 @@ class _SongsListPageState extends State<SongsListPage> {
 
   @override
   void initState() {
-    musicFuncs = MusicFuncs(context, widget.songs, widget.songModelItem!, widget.player);
     super.initState();
     requestPermission();
   }
@@ -59,10 +59,12 @@ class _SongsListPageState extends State<SongsListPage> {
         color: appColors.purple,
         elevation: 1,
         child: widget.songModelItem != null ||
-                widget.player != null || widget.songs!=null
+                widget.player != null ||
+                widget.songs != null
             ? SmallSongLine(
                 item: widget.songModelItem,
-                player: widget.player, songs: widget.songs,
+                player: widget.player,
+                songs: widget.songs,
               )
             : const SizedBox(),
       ),
@@ -74,7 +76,6 @@ class _SongsListPageState extends State<SongsListPage> {
           ignoreCase: true,
         ),
         builder: (context, item) {
-
           if (item.data == null) {
             return const Center(
               child: CircularProgressIndicator(),
@@ -83,10 +84,9 @@ class _SongsListPageState extends State<SongsListPage> {
           if (item.data!.isEmpty) {
             return const Center(child: TextZip("No songs found"));
           }
-          if (widget.songs==null && item.data != null){
+          if (widget.songs == null && item.data != null) {
             widget.songs?.clear();
             widget.songs?.addAll(item.data!);
-
           }
           return CustomScrollView(slivers: <Widget>[
             SliverPadding(
@@ -115,7 +115,8 @@ class _SongsListPageState extends State<SongsListPage> {
                               if (widget.player != null) {
                                 widget.player?.stop();
                               }
-                              musicFuncs = MusicFuncs(context, item.data!, item.data!.elementAt(index), widget.player);
+                              musicFuncs = MusicFuncs(context, item.data!,
+                                  item.data!.elementAt(index), widget.player);
 
                               musicFuncs.chooseMusic();
                             },

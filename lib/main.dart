@@ -1,12 +1,16 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:music_player_/pages/songs_list_page.dart';
 import 'package:sizer/sizer.dart';
 
 
-void main() {
+Future<void> main() async {
+  await JustAudioBackground.init(
+    androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
+    androidNotificationChannelName: 'Audio playback',
+    androidNotificationOngoing: true,
+  );
   runApp(const MyApp());
-  // AwesomeNotifications().initialize(defaultIcon, channels)
 }
 
 class MyApp extends StatelessWidget {

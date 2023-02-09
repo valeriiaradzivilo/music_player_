@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:music_player_/classes/app_colors.dart';
 import 'package:music_player_/classes/music_funcs.dart';
 import 'package:music_player_/custom_widgets/play_button.dart';
@@ -41,8 +42,20 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
       if (widget.oldPlayer == null) {
         player = AudioPlayer();
         await player
-            .setAudioSource(AudioSource.uri(Uri.parse(widget.item.uri!)));
+            .setAudioSource(
+            AudioSource.uri(
+                Uri.parse(widget.item.uri!),
+              tag: MediaItem(
+              // Specify a unique ID for each media item:
+              id: '${widget.item.id}',
+              // Metadata to display in the notification:
+              album: '${widget.item.artist}',
+              title: '${widget.item.displayNameWOExt}',
+              artUri: Uri.parse('https://i.pinimg.com/236x/75/44/39/75443963a53bfcf1a0d7f32ba8c7fcdb.jpg'),
+            ),
+            ));
         setState(() {
+          print("here");
           isPlaying = true;
         });
       } else {
@@ -51,16 +64,18 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
           isPlaying = player.playing;
         });
       }
-      if(isPlaying) {
-        player.play();
-      }
       setState(() {
+        duration = Duration(milliseconds: widget.item.duration!);
+        print("Duration $duration");
         isLoaded = true;
-        duration = player.duration!;
       });
+
     } on Exception {
       log("Error parsing song");
       isLoaded = false;
+    }
+    if(isPlaying) {
+      player.play();
     }
   }
 
