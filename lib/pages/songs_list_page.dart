@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:music_player_/classes/music_funcs.dart';
+import 'package:music_player_/main.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:sizer/sizer.dart';
 import '../classes/app_colors.dart';
 import '../custom_widgets/small_song_line.dart';
 import '../custom_widgets/text_customized_white.dart';
@@ -54,6 +56,16 @@ class _SongsListPageState extends State<SongsListPage> {
         backgroundColor: appColors.lightPurple,
         centerTitle: true,
         automaticallyImplyLeading: false,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.refresh),
+            // iconSize: 10.h,
+            onPressed: () async {
+              dispose();
+              main();
+            },
+          ),
+        ],
       ),
       bottomNavigationBar: BottomAppBar(
         color: appColors.purple,
@@ -82,7 +94,11 @@ class _SongsListPageState extends State<SongsListPage> {
             );
           }
           if (item.data!.isEmpty) {
-            return const Center(child: TextZip("No songs found"));
+            return Column(
+              children: [
+                Center(child: TextZip("No songs found\nDo you want to choose what to listen to?")),
+              ],
+            );
           }
           if (widget.songs == null && item.data != null) {
             widget.songs?.clear();

@@ -95,7 +95,7 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
     });
 
     setState(() {
-      musicFuncs = MusicFuncs(context, widget.songs, widget.item, widget.oldPlayer);
+      musicFuncs = MusicFuncs(context, widget.songs, widget.item, player);
     });
     super.initState();
   }
