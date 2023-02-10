@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
         title: 'Music player',
         theme: ThemeData(
           primarySwatch: Colors.deepPurple,
-          primaryColor: Color.fromRGBO(135, 101, 194, 1.0),
+          primaryColor: const Color.fromRGBO(135, 101, 194, 1.0),
         ),
         home: const SongsListPage(songModelItem: null, player: null, songs: null,),
       );

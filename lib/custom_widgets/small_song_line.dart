@@ -28,7 +28,7 @@ class _SmallSongLineState extends State<SmallSongLine>
 
   @override
   void initState() {
-    isPlaying = widget.player!.playing;
+    isPlaying = true;
     setState(() {
       position = widget.player!.position;
       musicFuncs =
@@ -63,7 +63,7 @@ class _SmallSongLineState extends State<SmallSongLine>
       },
       child: Container(
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
+            borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20), topRight: Radius.circular(20)),
             color: appColors.lightPurple),
         child: Padding(

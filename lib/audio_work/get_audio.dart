@@ -1,10 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:music_player_/classes/app_colors.dart';
 import 'package:music_player_/classes/music_funcs.dart';
 import 'package:on_audio_query/on_audio_query.dart';
-
 import '../custom_widgets/text_customized_white.dart';
 
 FutureBuilder<List<SongModel>> getMusic(

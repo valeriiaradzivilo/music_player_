@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class RecordWidget extends StatefulWidget {
@@ -34,7 +33,7 @@ class _RecordWidgetState extends State<RecordWidget> with TickerProviderStateMix
         width: 200,
         height: 205,
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(100),
-            color: Color.fromRGBO(31, 31, 31, 1.0)),
+            color: const Color.fromRGBO(31, 31, 31, 1.0)),
         child: Container(
 
           decoration: BoxDecoration(
@@ -44,7 +43,7 @@ class _RecordWidgetState extends State<RecordWidget> with TickerProviderStateMix
           ),
           child: Container(
             decoration: BoxDecoration(
-              border: Border.all(color: Color.fromRGBO(31, 31, 31, 1.0),
+              border: Border.all(color: const Color.fromRGBO(31, 31, 31, 1.0),
                 width: 10,),
               borderRadius: BorderRadius.circular(100),
             ),

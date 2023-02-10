@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
 
 Padding skipButton(bool isNext, goForward, goBackward, double size) {
   return Padding(

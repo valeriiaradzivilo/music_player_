@@ -1,6 +1,4 @@
 import 'dart:developer';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
@@ -18,11 +16,17 @@ class MusicFuncs {
   MusicFuncs(this.context, this.songsList, this.currentSong, this.oldPlayer);
 
   /// on list tile tap open chosen music file
-  chooseMusic() {
-    Navigator.of(context)
-        .pushReplacement(_createSlidingRoute());
+  chooseMusic(){
+    if(oldPlayer!=null)
+      {
+        oldPlayer!.stop();
+      }
+    oldPlayer = AudioPlayer();
+    setNewPlayer(songsList!.indexOf(currentSong));
+    Navigator.of(context).pushReplacement(_createSlidingRoute());
   }
 
+  // create animation when sliding from bottom line to big audio playing screen
   Route _createSlidingRoute() {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => AudioPlayingPage(
@@ -46,98 +50,96 @@ class MusicFuncs {
     );
   }
 
-  setSong() async {
-    oldPlayer = AudioPlayer();
-    try {
-      await oldPlayer
-          ?.setAudioSource(AudioSource.uri(Uri.parse(currentSong.uri!)));
-      oldPlayer?.play();
-    } on Exception {
-      log("Error parsing song");
-    }
-  }
 
+  // play song from player
   playSong(AudioPlayer player) {
-    print("music on");
     player.play();
   }
 
+  //pause song from player
   pauseSong(AudioPlayer player) {
     player.pause();
   }
 
+  // choose which song to play next (alphabetic order)
+  // TODO: implement random or cyclic order
+  int chooseNextSong() {
+    int itemPosition = songsList!.indexOf(currentSong);
+    int newItemPosition = 0;
+    itemPosition == songsList!.length - 1
+        ? newItemPosition = 0
+        : newItemPosition = itemPosition + 1;
+    return newItemPosition;
+  }
+
+  // choose song to play if we press on button play previous song
+  int choosePreviousSong() {
+    int itemPosition = songsList!.indexOf(currentSong);
+    int newItemPosition = 0;
+    itemPosition == 0
+        ? newItemPosition = songsList!.length - 1
+        : newItemPosition = itemPosition - 1;
+    return newItemPosition;
+  }
+
+  // play next song + open audio_playing_page
   playNextSongNChooseMusic() {
-    int itemPosition = songsList!.indexOf(currentSong);
-    int newItemPosition = 0;
-    itemPosition == songsList!.length - 1
-        ? newItemPosition = 0
-        : newItemPosition = itemPosition + 1;
+    int newItemPosition = chooseNextSong();
     currentSong = songsList!.elementAt(newItemPosition);
-    oldPlayer?.stop();
-    oldPlayer = null;
+    setNewPlayer(newItemPosition);
     chooseMusic();
   }
 
+  // play previous song + open audio_playing_page
   playPreviousSongNChooseMusic() {
-    int itemPosition = songsList!.indexOf(currentSong);
-    int newItemPosition = 0;
-    itemPosition == 0
-        ? newItemPosition = songsList!.length - 1
-        : newItemPosition = itemPosition - 1;
+    int newItemPosition = choosePreviousSong();
     currentSong = songsList!.elementAt(newItemPosition);
-    oldPlayer?.stop();
-    oldPlayer = null;
+    setNewPlayer(newItemPosition);
     chooseMusic();
   }
 
-  playNextSong() async {
-    int itemPosition = songsList!.indexOf(currentSong);
-    int newItemPosition = 0;
-    itemPosition == songsList!.length - 1
-        ? newItemPosition = 0
-        : newItemPosition = itemPosition + 1;
+  // set new player with next or previous song
+  setNewPlayer(int newItemPosition) async {
     currentSong = songsList!.elementAt(newItemPosition);
-    oldPlayer?.stop();
-    oldPlayer = AudioPlayer();
-    await oldPlayer
-        ?.setAudioSource(
-        AudioSource.uri(
-          Uri.parse(currentSong.uri!),
-          tag: MediaItem(
-            // Specify a unique ID for each media item:
-            id: '${currentSong.id}',
-            // Metadata to display in the notification:
-            album: '${currentSong.artist}',
-            title: '${currentSong.displayNameWOExt}',
-            artUri: Uri.parse('https://i.pinimg.com/236x/75/44/39/75443963a53bfcf1a0d7f32ba8c7fcdb.jpg'),
-          ),
-        ));
-    oldPlayer!.play();
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>SongsListPage(songModelItem: currentSong, player: oldPlayer, songs: songsList)));
-  }
-
-  playPreviousSong() async{
-    int itemPosition = songsList!.indexOf(currentSong);
-    int newItemPosition = 0;
-    itemPosition == 0
-        ? newItemPosition = songsList!.length - 1
-        : newItemPosition = itemPosition - 1;
-    currentSong = songsList!.elementAt(newItemPosition);
-    oldPlayer?.stop();
-    oldPlayer = AudioPlayer();
-    await oldPlayer?.setAudioSource(
-    AudioSource.uri(
-    Uri.parse(currentSong.uri!),
-    tag: MediaItem(
-    // Specify a unique ID for each media item:
-    id: '${currentSong.id}',
-    // Metadata to display in the notification:
-    album: '${currentSong.artist}',
-    title: '${currentSong.displayNameWOExt}',
-    artUri: Uri.parse('https://i.pinimg.com/236x/75/44/39/75443963a53bfcf1a0d7f32ba8c7fcdb.jpg'),
-    ),
+    oldPlayer!.pause();
+    await oldPlayer!.setAudioSource(AudioSource.uri(
+      Uri.parse(currentSong.uri!),
+      tag: MediaItem(
+        // Specify a unique ID for each media item:
+        id: '${currentSong.id}',
+        // Metadata to display in the notification:
+        album: '${currentSong.artist}',
+        title: currentSong.displayNameWOExt,
+        artUri: Uri.parse(
+            'https://i.pinimg.com/236x/75/44/39/75443963a53bfcf1a0d7f32ba8c7fcdb.jpg'),
+      ),
     ));
     oldPlayer!.play();
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>SongsListPage(songModelItem: currentSong, player: oldPlayer, songs: songsList)));
+  }
+
+  // play next song in small line
+  playNextSong() async {
+    int newItemPosition = chooseNextSong();
+    setNewPlayer(newItemPosition);
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => SongsListPage(
+                songModelItem: currentSong,
+                player: oldPlayer,
+                songs: songsList)));
+  }
+
+  //play previous song in small line
+  playPreviousSong() async {
+    int newItemPosition = choosePreviousSong();
+    setNewPlayer(newItemPosition);
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => SongsListPage(
+                songModelItem: currentSong,
+                player: oldPlayer,
+                songs: songsList)));
   }
 }
