@@ -66,7 +66,6 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
       }
       setState(() {
         duration = Duration(milliseconds: widget.item.duration!);
-        print("Duration $duration");
         isLoaded = true;
       });
 
@@ -200,9 +199,9 @@ class _AudioPlayingPageState extends State<AudioPlayingPage>
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      skipButton(false, musicFuncs.playNextSong, musicFuncs.playPreviousSong,5.h),
+                      skipButton(false, musicFuncs.playNextSongNChooseMusic, musicFuncs.playPreviousSongNChooseMusic,5.h),
                       playButton(isPlaying, playSong, stopSong,5.h),
-                      skipButton(true, musicFuncs.playNextSong, musicFuncs.playPreviousSong,5.h),
+                      skipButton(true, musicFuncs.playNextSongNChooseMusic, musicFuncs.playPreviousSongNChooseMusic,5.h),
                     ],
                   ),
                 ],
