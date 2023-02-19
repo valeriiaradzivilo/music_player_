@@ -40,6 +40,7 @@ dependencies:
   just_audio: ^0.9.31
   sizer: ^2.0.15
   just_audio_background: ^0.0.1-beta.9
+  file_picker: ^5.2.5
 
 
 

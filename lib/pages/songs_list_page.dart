@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:music_player_/classes/music_funcs.dart';
+import 'package:music_player_/custom_widgets/song_name_text.dart';
 import 'package:on_audio_query/on_audio_query.dart';
 import 'package:permission_handler/permission_handler.dart';
 import '../classes/app_colors.dart';
 import '../custom_widgets/small_song_line.dart';
 import '../custom_widgets/text_customized_white.dart';
+
 
 class SongsListPage extends StatefulWidget {
   const SongsListPage(
@@ -22,6 +24,7 @@ class SongsListPage extends StatefulWidget {
 }
 
 class _SongsListPageState extends State<SongsListPage> {
+
   AppColors appColors = AppColors();
   late MusicFuncs musicFuncs;
   // query to store songs
@@ -38,6 +41,7 @@ class _SongsListPageState extends State<SongsListPage> {
   void initState() {
     super.initState();
     requestPermission();
+
   }
 
   void requestPermission() {
@@ -104,10 +108,22 @@ class _SongsListPageState extends State<SongsListPage> {
               );
             }
             if (item.data!.isEmpty) {
-              return Column(
-                children: const [
-                  Center(child: TextZip("No songs found\nDo you want to choose what to listen to?")),
-                ],
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // TODO: implement playing uploaded song
+                      SongNameText("No songs found\nDo you want to choose what to listen to?",true),
+                      IconButton(onPressed: ()async {
+                      },
+                          icon: Icon(Icons.upload_outlined)),
+
+                    ],
+                  ),
+                ),
               );
             }
             if (widget.songs == null && item.data != null) {

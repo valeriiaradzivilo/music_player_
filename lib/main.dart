@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:music_player_/pages/songs_list_page.dart';
+import 'package:music_player_/pages/web_vers_page.dart';
 import 'package:sizer/sizer.dart';
 
 
@@ -10,7 +12,12 @@ Future<void> main() async {
     androidNotificationChannelName: 'Audio playback',
     androidNotificationOngoing: true,
   );
-  runApp(const MyApp());
+  if (defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS) {
+    runApp(const MyApp());
+  }
+  else{
+    runApp(const WebPageVers());
+  }
 }
 
 class MyApp extends StatelessWidget {
